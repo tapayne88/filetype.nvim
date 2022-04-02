@@ -97,16 +97,7 @@ function M.setup(opts)
         custom_map = opts.overrides
     end
 end
-function M.resolve()
-    -- Just in case
-    vim.g.did_load_filetypes = 1
-
-    local absolute_path = vim.api.nvim_buf_get_name(0)
-
-    if #absolute_path == 0 then
-        return
-    end
-
+function M.resolve_path(absolute_path)
     local filename = absolute_path:match(".*[\\/](.*)")
     local ext = filename:match(".+%.(%w+)")
 
@@ -209,6 +200,18 @@ function M.resolve()
             or shebang
         set_filetype(mapped_shebang)
     end
+end
+function M.resolve()
+    -- Just in case
+    vim.g.did_load_filetypes = 1
+
+    local absolute_path = vim.api.nvim_buf_get_name(0)
+
+    if #absolute_path == 0 then
+        return
+    end
+
+    return M.resolve_path(absolute_path)
 end
 
 return M
